@@ -27,6 +27,6 @@
 const emit = defineEmits(['openModal']);
 
 const openModal = () => {
-    emit('openModal'); // Теперь emit доступен
+    emit('openModal');
 };
 </script>

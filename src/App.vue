@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <OpenBtn @openModal="openModal" />
-    <FolderTree v-if="showModal" @close="closeModal" :title="'Выберите папку'" :folders="mockFolders" @select="showSelect"/>
+    <Modal v-if="showModal" @close="closeModal" :title="'Выберите папку'" :folders="mockFolders" @select="showSelect" />
     <div v-if="selectedFolder">id выбранной папки: {{ selectedFolder }}</div>
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import OpenBtn from './components/OpenBtn.vue';
-import FolderTree from './components/FolderTree.vue';
+import Modal from './components/Modal.vue';
 
 const showModal = ref(false);
 const selectedFolder = ref<string>()
@@ -21,10 +21,10 @@ const openModal = () => {
 const closeModal = () => {
   showModal.value = false;
 };
-const showSelect = (data: string)=>{
-  alert('id выбранной папки: ' + data)
+const showSelect = (data: string) => {
   selectedFolder.value = data;
 }
+
 
 const mockFolders = [
   {
@@ -45,22 +45,21 @@ const mockFolders = [
 body {
   margin: 0;
   padding: 0;
-
 }
 
-button {
-  font-family: 'Jost', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  font-style: normal;
-  cursor: pointer;
-}
-
+button,
 .main {
   font-family: 'Jost', sans-serif;
   font-size: 18px;
   font-weight: 500;
   font-style: normal;
+}
+
+button {
+  cursor: pointer;
+}
+
+.main {
   background-color: #cecece;
   height: 100vh;
   display: flex;
