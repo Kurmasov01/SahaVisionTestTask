@@ -2,11 +2,11 @@
     <div class="modal-wrapper" @click.self="$emit('close')">
         <div class="modal">
             <h1 class="modal-title">
-                {{ title }}
+                {{ props.title }}
             </h1>
             <div class="modal-tree">
                 <div class="folders-wrapper">
-                    <FolderTree :folders="folders" :selectedId="selectedFolderId" @select="selectFolder" />
+                    <FolderTree :folders="props.folders" :selectedId="selectedFolderId" @select="selectFolder" />
                 </div>
             </div>
             <div class="btns-wrapper">
@@ -17,33 +17,29 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+
+import { ref } from 'vue';
 import FolderTree from './FolderTree.vue';
+import type { Folder } from 'src/types/types.ts';
 
 const emit = defineEmits(['close', 'select']);
 const selectedFolderId = ref<number | null>(null);
 
-defineProps({
-    title: String,
-    folders: {
-        type: Array as PropType<Folder[]>,
-        required: true,
-    },
-});
-
-interface Folder {
-    name: string;
-    id: number;
-    children: Folder[];
+type ModalProps = {
+    title: string,
+    folders: Folder[],
 }
+const props = defineProps<ModalProps>()
 
 function selectFolder(id: number) {
     selectedFolderId.value = id;
 }
+
 function confirm() {
     emit('close');
     emit('select', selectedFolderId.value);
 }
+
 </script>
 
 <style>

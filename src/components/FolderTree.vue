@@ -5,12 +5,13 @@
                 <span v-if="item.children.length > 0" @click="toggle(item.id)">
                     {{ isExpanded(item.id) ? '-' : '+' }}
                 </span>
-                <img src="@/assets/icons8-folder.svg" width="28px"/>
-                <span @click="selectFolder(item.id)" :class="{ selected: selectedId === item.id }" class="folder-title">
+                <img src="@/assets/icons8-folder.svg" width="28px" />
+                <span @click="selectFolder(item.id)" :class="{ selected: props.selectedId === item.id }"
+                    class="folder-title">
                     {{ item.name }}
                 </span>
             </div>
-            <FolderTree v-if="isExpanded(item.id)" :folders="item.children" :selectedId="selectedId"
+            <FolderTree v-if="isExpanded(item.id)" :folders="item.children" :selectedId="props.selectedId"
                 @select="selectFolder" />
         </li>
     </ul>
@@ -18,25 +19,16 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, PropType } from 'vue';
+import type { Folder } from 'src/types/types.ts';
 
-interface Folder {
-    id: number;
-    name: string;
-    children: Folder[];
+type FolderTreeProps = {
+    selectedId: number | null,
+    folders: Folder[],
 }
 
-defineProps({
-    folders: {
-        type: Array as PropType<Folder[]>,
-        required: true,
-    },
-    selectedId: {
-        type: [Number, null] as PropType<number | null>,
-        required: false,
-    },
-});
-
+const props = defineProps<FolderTreeProps>()
 const expandedFolders = ref<Set<number>>(new Set());
+const emit = defineEmits(['select']);
 
 function toggle(id: number) {
     if (expandedFolders.value.has(id)) {
@@ -45,16 +37,18 @@ function toggle(id: number) {
         expandedFolders.value.add(id);
     }
 }
+
 function isExpanded(id: number): boolean {
     return expandedFolders.value.has(id);
 }
-const emit = defineEmits(['select']);
+
 function selectFolder(id: number) {
     emit('select', id);
 }
+
 </script>
 
-<style scoped>
+<style>
 .selected {
     font-weight: bold;
     color: blue;

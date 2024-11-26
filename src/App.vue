@@ -6,7 +6,6 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
 import { ref } from 'vue';
 import OpenBtn from './components/OpenBtn.vue';
@@ -18,13 +17,14 @@ const selectedFolder = ref<string>()
 const openModal = () => {
   showModal.value = true;
 };
+
 const closeModal = () => {
   showModal.value = false;
 };
+
 const showSelect = (data: string) => {
   selectedFolder.value = data;
 }
-
 
 const mockFolders = [
   {
