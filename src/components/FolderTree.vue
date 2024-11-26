@@ -1,32 +1,54 @@
 <template>
-    <div class="modal-wrapper">
+    <div class="modal-wrapper" @click.self="$emit('close')">
         <div class="modal">
             <h1 class="modal-title">
-                Выбор паки
+                {{ title }}
             </h1>
             <div class="modal-tree">
                 <div class="folders-wrapper">
-                    <ul class="folders">
-                        <li class="folder">
-                            <img src="@/assets/icons8-folder.svg" width="28px" alt="">
-                            <span class="folder-title">Папка</span>
-                        </li>
-                    </ul>
+                    <Folder :folders="folders" :selectedId="selectedFolderId" @select="selectFolder" />
                 </div>
-
             </div>
             <div class="btns-wrapper">
-                <button class="btn select-btn">
-                    Ок
-                </button>
-                <button class="btn select-btn">
-                    Закрыть
-                </button>
+                <button class="btn select-btn" @click="confirm">Ок</button>
+                <button class="btn select-btn" @click="$emit('close')">Закрыть</button>
             </div>
-
         </div>
     </div>
 </template>
+<script lang="ts" setup>
+import { PropType, ref } from 'vue';
+import Folder from './Folder.vue';
+
+const emit = defineEmits(['close', 'select']);
+
+interface Folder {
+    name: string;
+    id: number;
+    children: Folder[];
+}
+
+defineProps({
+    title: String,
+    folders: {
+        type: Array as PropType<Folder[]>,
+        required: true,
+    },
+});
+const isModalVisible = ref(false);
+const selectedFolderId = ref<number | null>(null);
+function handleSelect(id: number) {
+    selectedFolderId.value = id;
+}
+function selectFolder(id: number) {
+    selectedFolderId.value = id;
+}
+function confirm() {
+    emit('close');
+    emit('select', selectedFolderId.value);
+}
+</script>
+
 <style>
 .modal-wrapper {
     position: absolute;
@@ -38,6 +60,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .modal {
@@ -49,13 +72,16 @@
     background-color: white;
     border-radius: 10px;
 }
-.modal-tree{
+
+.modal-tree {
     width: 100%;
 }
+
 .folder {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     list-style: none;
+    justify-content: center;
 }
 
 .btns-wrapper {
@@ -65,6 +91,3 @@
     margin-bottom: 20px;
 }
 </style>
-<script lang="ts" setup>
-
-</script>

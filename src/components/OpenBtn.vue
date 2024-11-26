@@ -22,8 +22,11 @@
     border: none;
 }
 </style>
+
 <script lang="ts" setup>
-    const openModal = () => {
-        console.log('123')
-    } 
+const emit = defineEmits(['openModal']);
+
+const openModal = () => {
+    emit('openModal'); // Теперь emit доступен
+};
 </script>
